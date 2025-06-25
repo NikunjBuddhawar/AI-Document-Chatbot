@@ -4,8 +4,10 @@ import os, shutil, fitz
 from uuid import uuid4
 from llama_cpp import Llama
 
+## Initialise the app.
 app = FastAPI()
 
+## Adds CORS middleware so that frontends(like react) can send request without getting blocked.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,31 +28,37 @@ print("✅ Model loaded successfully.")
 
 
 @app.post("/upload/")
+
 async def upload_pdf(file: UploadFile = File(...)):
-    if not file.filename.endswith(".pdf"):
-        return {"error": "Only PDF files are allowed."}
+    if not file.filename.endswith(".pdf"): 
+        return {"error": "Only PDF files are allowed."}  ## Checks if the file is a pdf or not.
     
-    doc_id = str(uuid4())
+    doc_id = str(uuid4()) ## Creates a uique uuid for the uploaded document.
     file_path = os.path.join(UPLOAD_DIR, f"{doc_id}.pdf")
     with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+        shutil.copyfileobj(file.file, buffer) ## Basically stores the pdf in the uploaded_pdf folder.
 
     pages = []
     with fitz.open(file_path) as doc:
         for page in doc:
-            pages.append(page.get_text())
+            pages.append(page.get_text()) ## Using fitz it opens every page of the pdf extracts text from it and stores it in the pages list.
 
+    ## then stores that pages list in the doc_store dictionary with doc_id as the key.
     doc_store[doc_id] = pages
     return {"message": "File uploaded successfully.", "doc_id": doc_id, "total_pages": len(pages)}
 
 
-@app.post("/ask/")
+
+@app.post("/ask/") ## Endpoint for asking a question.
 async def ask_question(
-    doc_id: str = Form(...),
+    doc_id: str = Form(...), 
     question: str = Form(...),
     page_number: int = Form(...)
+
+    ## All these values will come from the frontend form once the user enters a question.
 ):
     try:
+        ## Checks if the doc_id is invalid or if the page number given is out of bounds.
         pages = doc_store.get(doc_id)
         if not pages or not (0 <= page_number < len(pages)):
             return {"error": "Invalid document ID or page number."}
@@ -65,9 +73,9 @@ async def ask_question(
             f"Context:\n{selected_text}\n\nQuestion: {question}\nAnswer:"
         )
 
-        output = llm(prompt, max_tokens=200, stop=["\nQ:", "\nQuestion:"], echo=False)
+        output = llm(prompt, max_tokens=200, stop=["\nQ:", "\nQuestion:"], echo=False) ## We are calling the model and passing it the prompt,token limit and we are telling it that it should stop generating if the model starts a new question.
         answer = output["choices"][0]["text"].strip()
 
         return {"answer": answer}
     except Exception as e:
-        return {"error": "Internal server error", "details": str(e)}
+        return {"error": "Internal server error", "details": str(e)} ##Incase of an exception.

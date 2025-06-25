@@ -27,12 +27,8 @@ function App() {
   }, [pdfFile]);
 
   // Ref to handle the file input element
-  const fileInputRef = useRef(null);
-
-  // State to store SVG path for design (optional visual)
-  const [curvePath, setCurvePath] = useState("");
-
-  // Function to handle asking a question about the uploaded PDF
+   const fileInputRef = useRef(null);
+  // Function to handle asking a question about the uploaded PDF(checks if user entered a question,page number and if the pdf is uploaded or not.)
   const handleAsk = async () => {
     if (!question.trim() || !docId || pageNumber === "") return;
 
@@ -47,7 +43,7 @@ function App() {
       const formData = new FormData();
       formData.append("doc_id", docId);
       formData.append("question", question);
-      formData.append("page_number", parseInt(pageNumber) - 1); // Adjust for 0-based index
+      formData.append("page_number", parseInt(pageNumber) - 1); 
 
       // Send POST request to ask question
       const res = await fetch("http://localhost:8000/ask/", {
@@ -94,17 +90,12 @@ function App() {
 
       // Handle response from server
       const data = await res.json();
-      if (data.doc_id) setDocId(data.doc_id);
-      alert(data.message || data.error);
+      if (data.doc_id) setDocId(data.doc_id); // Stores the doc_id for future Q & A.  
+      alert(data.message || data.error); // Shows a pop up with sucess or error message.
     } catch (err) {
-      alert("Upload failed: " + err.message);
+      alert("Upload failed: " + err.message); // Handles the error.
     }
   };
-
-  // Set a predefined SVG path after component mounts
-  useEffect(() => {
-    setCurvePath("M80,160 C150,100 230,80 280,20");
-  }, []);
 
   return (
     <div className="app-container">

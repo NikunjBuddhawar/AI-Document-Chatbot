@@ -24,8 +24,7 @@ body {
 .logo {
   font-size: 18px;
   font-weight: bold;
-  font: orbitron;
-
+  font-family: 'Orbitron', sans-serif;
 }
 
 .upload-box {
@@ -78,12 +77,10 @@ body {
   cursor: pointer;
 }
 
-
 .main-layout {
   display: flex;
   flex-grow: 1;
   height: calc(100vh - 64px); /* subtract navbar height */
- 
 }
 
 .chat-pane {
@@ -179,7 +176,6 @@ body {
   font-style: italic;
 }
 
-
 .chat-placeholder {
   flex-grow: 1;
   display: flex;
@@ -215,5 +211,166 @@ body {
   z-index: 2;
 }
 
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
+    padding: 8px 16px;
+    height: 50px;
+  }
+  
+  .logo {
+    font-size: 16px;
+    align-self: center;
+    text-align: left;
+  }
+  
+  .upload-box {
+    justify-content: flex-end;
+    gap: 4px;
+  }
+  
+  .custom-upload {
+    min-width: 90px;
+    font-size: 10px;
+    padding: 2px 6px;
+    height: 20px;
+  }
+  
+  .upload-box button {
+    padding: 2px 6px;
+    font-size: 10px;
+    height: 20px;
+  }
 
+  .main-layout {
+    flex-direction: column;
+    height: calc(100vh - 50px);
+  }
 
+  .chat-pane {
+    width: 100%;
+    border-right: none;
+    height: 100%;
+  }
+
+  /* Hide PDF pane on mobile */
+  .pdf-pane {
+    display: none;
+  }
+
+  .chat-area {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .input-area {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .input-area input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px; /* Prevent zoom on iOS */
+    box-sizing: border-box;
+  }
+
+  .input-area button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .chat-entry {
+    max-width: 100%;
+  }
+
+  .question-bubble,
+  .answer-bubble {
+    font-size: 14px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+  
+  .question-bubble {
+    margin-left: 20px;
+  }
+  
+  .answer-bubble {
+    margin-right: 20px;
+  }
+
+  .chat-placeholder {
+    font-size: 14px;
+    padding: 40px 20px;
+  }
+}
+
+/* Small mobile view (width <= 480px) */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 6px 12px;
+    height: 45px;
+  }
+  
+  .logo {
+    font-size: 14px;
+  }
+  
+  .upload-box {
+    gap: 3px;
+  }
+  
+  .custom-upload {
+    min-width: 80px;
+    font-size: 9px;
+    height: 18px;
+  }
+  
+  .upload-box button {
+    padding: 2px 4px;
+    font-size: 9px;
+    height: 18px;
+  }
+
+  .main-layout {
+    height: calc(100vh - 45px);
+  }
+
+  .chat-area {
+    padding: 12px;
+  }
+
+  .input-area {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .input-area input {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .input-area button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .question-bubble,
+  .answer-bubble {
+    font-size: 13px;
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .chat-placeholder {
+    font-size: 13px;
+    padding: 30px 15px;
+  }
+}
